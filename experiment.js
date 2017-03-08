@@ -108,10 +108,10 @@ var fontSize=2;
 var dragging;
 
 //Boundary variables
-xMin=0.65;
-xMax=3.35;
-yMin=0.15;
-yMax=2.85;
+var xMin=0.65;
+var xMax=3.35;
+var yMin=0.15;
+var yMax=2.85;
 
 //GUI Control Labels
 var squareLabel = "square";
@@ -123,6 +123,18 @@ var trapeziumLabel = "trapezium";
 var diagonalsLabel = "show diagonals";
 var anglesLabel = "show angles";
 var dragLabel = "Enable Resizing";
+
+//default coordinates
+var defaultxA = square_xA;
+var defaultyA = square_yA;
+var defaultxB = square_xB;
+var defaultyB = square_yB;
+var defaultxC = square_xC;
+var defaultyC = square_yC;
+var defaultxD = square_xD;
+var defaultyD = square_yD;
+
+var initialText;
 
 /*------------------------GUI Handlers----------------------------------------------------*/
 function emptyHandler() {
@@ -192,6 +204,27 @@ function dragHandler(newVal) {
 
 /*-----------------------End of GUI Handlers---------------------------------------------*/
 /*-----------------------Helper Functions------------------------------------------------*/
+
+function isSec(t) {
+  var sec=Math.round(t/1000);
+  if(prevVal!=sec) {
+    prevVal=sec;
+    return(sec);
+  }
+  return(-1);
+}
+
+function addDrag() {
+  PIEdragElement(quadA);
+  PIEdragElement(quadB);
+  PIEdragElement(quadC);
+  PIEdragElement(quadD);
+  PIEsetDrag(quadA,dragA);
+  PIEsetDrag(quadB,dragB);
+  PIEsetDrag(quadC,dragC);
+  PIEsetDrag(quadD,dragD);
+}
+
 function toDegrees (angle) {
   return angle * (180 / Math.PI);
 }
@@ -208,54 +241,121 @@ function calculateAngles() {
   var angleC = Math.round(toDegrees(find_angle(quadB.position,quadC.position,quadD.position)));
   var angleD = Math.round(toDegrees(find_angle(quadC.position,quadD.position,quadA.position)));
 
-  PIEchangeInputText("∠A",angleA+"°");
-  PIEchangeInputText("∠B",angleB+"°");
-  PIEchangeInputText("∠C",angleC+"°");
-  PIEchangeInputText("∠D",angleD+"°");
+  PIEchangeDisplayText("∠A",angleA+"°");
+  PIEchangeDisplayText("∠B",angleB+"°");
+  PIEchangeDisplayText("∠C",angleC+"°");
+  PIEchangeDisplayText("∠D",angleD+"°");
+}
+
+function setShapeCoordinates(shape) {
+  if(shape==SQUARE) {
+    defaultxA = square_xA;
+    defaultyA = square_yA;
+    defaultxB = square_xB;
+    defaultyB = square_yB;
+    defaultxC = square_xC;
+    defaultyC = square_yC;
+    defaultxD = square_xD;
+    defaultyD = square_yD;
+  }
+
+  else if(shape==RECTANGLE) {
+    defaultxA = rectangle_xA;
+    defaultyA = rectangle_yA;
+    defaultxB = rectangle_xB;
+    defaultyB = rectangle_yB;
+    defaultxC = rectangle_xC;
+    defaultyC = rectangle_yC;
+    defaultxD = rectangle_xD;
+    defaultyD = rectangle_yD;
+  }
+
+  else if(shape==PARALLELOGRAM) {
+    defaultxA = parallelogram_xA;
+    defaultyA = parallelogram_yA;
+    defaultxB = parallelogram_xB;
+    defaultyB = parallelogram_yB;
+    defaultxC = parallelogram_xC;
+    defaultyC = parallelogram_yC;
+    defaultxD = parallelogram_xD;
+    defaultyD = parallelogram_yD;
+  }
+
+  else if(shape==ROHUMBUS) {
+    defaultxA = rohumbus_xA;
+    defaultyA = rohumbus_yA;
+    defaultxB = rohumbus_xB;
+    defaultyB = rohumbus_yB;
+    defaultxC = rohumbus_xC;
+    defaultyC = rohumbus_yC;
+    defaultxD = rohumbus_xD;
+    defaultyD = rohumbus_yD;
+  }
+
+  else if(shape==KITE) {
+    defaultxA = kite_xA;
+    defaultyA = kite_yA;
+    defaultxB = kite_xB;
+    defaultyB = kite_yB;
+    defaultxC = kite_xC;
+    defaultyC = kite_yC;
+    defaultxD = kite_xD;
+    defaultyD = kite_yD;
+  }
+
+  else if(shape==TRAPEZIUM) {
+    defaultxA = trapezium_xA;
+    defaultyA = trapezium_yA;
+    defaultxB = trapezium_xB;
+    defaultyB = trapezium_yB;
+    defaultxC = trapezium_xC;
+    defaultyC = trapezium_yC;
+    defaultxD = trapezium_xD;
+    defaultyD = trapezium_yD;
+  }
 }
 
 function setCurrentShape(shape) {
   currentShape=shape;
-  printShape();
-
+  setShapeCoordinates(currentShape);
   if(shape==SQUARE) {
     PIEchangeInputCheckbox(squareLabel,true);
-    reshapeQuadrilateral(square_xA,square_yA,square_xB,square_yB,square_xC,square_yC,square_xD,square_yD);
+    //reshapeQuadrilateral(square_xA,square_yA,square_xB,square_yB,square_xC,square_yC,square_xD,square_yD);
   }
   else
     PIEchangeInputCheckbox(squareLabel,false);
 
   if(shape==RECTANGLE) {
     PIEchangeInputCheckbox(rectangleLabel,true);
-    reshapeQuadrilateral(rectangle_xA,rectangle_yA,rectangle_xB,rectangle_yB,rectangle_xC,rectangle_yC,rectangle_xD,rectangle_yD);
+    //reshapeQuadrilateral(rectangle_xA,rectangle_yA,rectangle_xB,rectangle_yB,rectangle_xC,rectangle_yC,rectangle_xD,rectangle_yD);
   }
   else
     PIEchangeInputCheckbox(rectangleLabel,false);
 
   if(shape==PARALLELOGRAM) {
     PIEchangeInputCheckbox(parallelogramLabel,true);
-    reshapeQuadrilateral(parallelogram_xA,parallelogram_yA,parallelogram_xB,parallelogram_yB,parallelogram_xC,parallelogram_yC,parallelogram_xD,parallelogram_yD);
+    //reshapeQuadrilateral(parallelogram_xA,parallelogram_yA,parallelogram_xB,parallelogram_yB,parallelogram_xC,parallelogram_yC,parallelogram_xD,parallelogram_yD);
   }
   else
     PIEchangeInputCheckbox(parallelogramLabel,false);
 
   if(shape==ROHUMBUS) {
     PIEchangeInputCheckbox(rohumbusLabel,true);
-    reshapeQuadrilateral(rohumbus_xA,rohumbus_yA,rohumbus_xB,rohumbus_yB,rohumbus_xC,rohumbus_yC,rohumbus_xD,rohumbus_yD);
+    //reshapeQuadrilateral(rohumbus_xA,rohumbus_yA,rohumbus_xB,rohumbus_yB,rohumbus_xC,rohumbus_yC,rohumbus_xD,rohumbus_yD);
   }
   else
     PIEchangeInputCheckbox(rohumbusLabel,false);
 
   if(shape==KITE) {
     PIEchangeInputCheckbox(kiteLabel,true);
-    reshapeQuadrilateral(kite_xA,kite_yA,kite_xB,kite_yB,kite_xC,kite_yC,kite_xD,kite_yD);
+    //reshapeQuadrilateral(kite_xA,kite_yA,kite_xB,kite_yB,kite_xC,kite_yC,kite_xD,kite_yD);
   }
   else
     PIEchangeInputCheckbox(kiteLabel,false);
 
   if(shape==TRAPEZIUM) {
     PIEchangeInputCheckbox(trapeziumLabel,true);
-    reshapeQuadrilateral(trapezium_xA,trapezium_yA,trapezium_xB,trapezium_yB,trapezium_xC,trapezium_yC,trapezium_xD,trapezium_yD);
+    //reshapeQuadrilateral(trapezium_xA,trapezium_yA,trapezium_xB,trapezium_yB,trapezium_xC,trapezium_yC,trapezium_xD,trapezium_yD);
   }
   else
     PIEchangeInputCheckbox(trapeziumLabel,false);
@@ -266,14 +366,14 @@ function insideBoundaries(x1,y1) {
   if(x1>=xMin&&x1<=xMax&&y1>=yMin&&y1<=yMax)
     return(true);
   else
-    return(false);
+    return(true);
 }
 
 /*-----------------------Initializers----------------------------------------------------*/
 function initializeScene() {
   mySceneTLX = 0.0;
   mySceneTLY = 3.0;
-  mySceneBRX = 5.2;
+  mySceneBRX = 8;
   mySceneBRY = 0.0;
   myCenterX = (mySceneTLX+mySceneBRX)/2;
   myCenterY = (mySceneTLY+mySceneBRY)/2;
@@ -342,9 +442,18 @@ function initializeVerticeDefaults() {
   trapezium_yC = square_yC;
   trapezium_xD = square_xD-0.2;
   trapezium_yD = square_yD;
+
+  defaultxA = square_xA;
+  defaultyA = square_yA;
+  defaultxB = square_xB;
+  defaultyB = square_yB;
+  defaultxC = square_xC;
+  defaultyC = square_yC;
+  defaultxD = square_xD;
+  defaultyD = square_yD;
 }
 
-function initializeGUIControls() {
+function initializeInputGUIControls() {
   PIEaddInputCommand("Shape",emptyHandler);
   PIEaddInputCheckbox(squareLabel,true,squareHandler);
   PIEaddInputCheckbox(rectangleLabel,false,rectangleHandler);
@@ -352,20 +461,22 @@ function initializeGUIControls() {
   PIEaddInputCheckbox(rohumbusLabel,false,rohumbusHandler);
   PIEaddInputCheckbox(kiteLabel,false,kiteHandler);
   PIEaddInputCheckbox(trapeziumLabel,false,trapeziumHandler);
-  PIEaddInputCommand("Display Options",emptyHandler);
-  PIEaddInputCheckbox(diagonalsLabel,false,diagonalsHandler);
-  PIEaddInputCheckbox(dragLabel,false,dragHandler);
-  PIEaddInputCommand("Angles",emptyHandler);
-  PIEaddInputText("∠A","90°",emptyHandler);
-  PIEaddInputText("∠B","90°",emptyHandler);
-  PIEaddInputText("∠C","90°",emptyHandler);
-  PIEaddInputText("∠D","90°",emptyHandler);
+}
+
+function initializeGUIControls() {
+  PIEaddDisplayCommand("Display Options",emptyHandler);
+  PIEaddDisplayCheckbox(diagonalsLabel,false,diagonalsHandler);
+  PIEaddDisplayCheckbox(dragLabel,false,dragHandler);
+  PIEaddDisplayCommand("Angles",emptyHandler);
+  PIEaddDisplayText("∠A","-",emptyHandler);
+  PIEaddDisplayText("∠B","-",emptyHandler);
+  PIEaddDisplayText("∠C","-",emptyHandler);
+  PIEaddDisplayText("∠D","-",emptyHandler);
 }
 /*-----------------------End of Initializers---------------------------------------------*/
 
 /*-----------------------Drag Functions-------------------------------------------------------------*/
 function dragA(element,newPos) {
-  console.log("A drag "+printShape());
   if(insideBoundaries(newPos.x,newPos.y)==false)
     return;
   //Compute new coordinates for all other points
@@ -625,6 +736,85 @@ function reshapeQuadrilateral(xA,yA,xB,yB,xC,yC,xD,yD) {
   calculateAngles();
 }
 
+function setLines() {
+  sideAB.geometry.vertices[0].x=defaultxA;
+  sideAB.geometry.vertices[0].y=defaultyA;
+  sideAB.geometry.vertices[1].x=defaultxB;
+  sideAB.geometry.vertices[1].y=defaultyB;
+
+  sideBC.geometry.vertices[0].x=defaultxB;
+  sideBC.geometry.vertices[0].y=defaultyB;
+  sideBC.geometry.vertices[1].x=defaultxC;
+  sideBC.geometry.vertices[1].y=defaultyC;
+
+  sideCD.geometry.vertices[0].x=defaultxC;
+  sideCD.geometry.vertices[0].y=defaultyC;
+  sideCD.geometry.vertices[1].x=defaultxD;
+  sideCD.geometry.vertices[1].y=defaultyD;
+
+  sideDA.geometry.vertices[0].x=defaultxD;
+  sideDA.geometry.vertices[0].y=defaultyD;
+  sideDA.geometry.vertices[1].x=defaultxA;
+  sideDA.geometry.vertices[1].y=defaultyA;
+
+  //Set Diagonals
+  diagAC.geometry.vertices[0].x=defaultxA;
+  diagAC.geometry.vertices[0].y=defaultyA;
+  diagAC.geometry.vertices[1].x=defaultxC;
+  diagAC.geometry.vertices[1].y=defaultyC;
+
+  diagBD.geometry.vertices[0].x=defaultxB;
+  diagBD.geometry.vertices[0].y=defaultyB;
+  diagBD.geometry.vertices[1].x=defaultxD;
+  diagBD.geometry.vertices[1].y=defaultyD;
+
+  //set verticesNeedUpdate of all lines to be true
+  sideAB.geometry.verticesNeedUpdate=true;
+  sideBC.geometry.verticesNeedUpdate=true;
+  sideCD.geometry.verticesNeedUpdate=true;
+  sideDA.geometry.verticesNeedUpdate=true;
+  diagAC.geometry.verticesNeedUpdate=true;
+  diagBD.geometry.verticesNeedUpdate=true;
+}
+
+function removeQuadrilateral() {
+  quadA.position.z=10;
+  quadB.position.z=10;
+  quadC.position.z=10;
+  quadD.position.z=10;
+
+  textA.position.z=10;
+  textB.position.z=10;
+  textC.position.z=10;
+  textD.position.z=10;
+
+  sideAB.geometry.vertices[0].z=10;
+  sideAB.geometry.vertices[1].z=10;
+
+  sideBC.geometry.vertices[0].z=10;
+  sideBC.geometry.vertices[1].z=10;
+
+  sideCD.geometry.vertices[0].z=10;
+  sideCD.geometry.vertices[1].z=10;
+
+  sideDA.geometry.vertices[0].z=10;
+  sideDA.geometry.vertices[1].z=10;
+
+  diagAC.geometry.vertices[0].z=10;
+  diagAC.geometry.vertices[1].z=10;
+
+  diagBD.geometry.vertices[0].z=10;
+  diagBD.geometry.vertices[1].z=10;
+
+  sideAB.geometry.verticesNeedUpdate=true;
+  sideBC.geometry.verticesNeedUpdate=true;
+  sideCD.geometry.verticesNeedUpdate=true;
+  sideDA.geometry.verticesNeedUpdate=true;
+
+  diagAC.geometry.verticesNeedUpdate=true;
+  diagBD.geometry.verticesNeedUpdate=true;
+}
+
 function createBackground() {
   var myGeometry = new THREE.BoxGeometry(mySceneW,mySceneH,0.1);
   var myMaterial = new THREE.MeshBasicMaterial();
@@ -638,22 +828,20 @@ function createBackground() {
 
 function initializeText(text) {
   //Create Texture
-var bitmap = document.createElement('canvas');
-var g = bitmap.getContext('2d');
-bitmap.width = 512;
-bitmap.height = 512;
-console.log("Canvas");
-console.log(bitmap);
-g.fillStyle = '#eeffee';
-g.fillRect(0,0,bitmap.width,bitmap.height);
-g.font = 'Bold 400px Arial';
-g.fillStyle = '#000000';
-g.fillText(text, 128,450);
-
-// canvas contents will be used for a texture
-var texture = new THREE.Texture(bitmap)
-texture.needsUpdate = true;
-
+  var bitmap = document.createElement('canvas');
+  var g = bitmap.getContext('2d');
+  bitmap.width = 512;
+  bitmap.height = 512;
+  console.log("Canvas");
+  console.log(bitmap);
+  g.fillStyle = '#eeffee';
+  g.fillRect(0,0,bitmap.width,bitmap.height);
+  g.font = 'Bold 400px Arial';
+  g.fillStyle = '#000000';
+  g.fillText(text, 128,450);
+  // canvas contents will be used for a texture
+  var texture = new THREE.Texture(bitmap)
+  texture.needsUpdate = true;
   //Create Box
   var myGeometry = new THREE.BoxGeometry(0.1,0.1,0.0001);
   var myMaterial = new THREE.MeshBasicMaterial({map: texture});
@@ -663,12 +851,44 @@ texture.needsUpdate = true;
   return(textBox);
 }
 
+function createInitialText() {
+  //Create Texture
+  var bitmap = document.createElement('canvas');
+  var g = bitmap.getContext('2d');
+  bitmap.width = 1024;
+  bitmap.height = 1024;
+  console.log("Canvas");
+  console.log(bitmap);
+  g.fillStyle = '#eeffee';
+  g.fillRect(0,0,bitmap.width,bitmap.height);
+  g.font = 'Bold 60px Arial';
+  g.fillStyle = '#000000';
+  g.fillText("SELECT A SHAPE", 250,360);
+  g.fillText("AND", 425,430);
+  g.fillText("PRESS START TO CONTINUE", 75,500);
+  // canvas contents will be used for a texture
+  var texture = new THREE.Texture(bitmap)
+  texture.needsUpdate = true;
+  //Create Box
+  var myGeometry = new THREE.BoxGeometry(2,2,0.0001);
+  var myMaterial = new THREE.MeshBasicMaterial({map: texture});
+  var textBox = new THREE.Mesh(myGeometry,myMaterial);
+  textBox.position.set(myCenterX,myCenterY,quadZ);
+  PIEaddElement(textBox);
+  return textBox
+}
+
+
 function alignText() {
   var val=0.09
-  textA.position.set(quadA.position.x-val,quadA.position.y+val,quadZ-0.01);
-  textB.position.set(quadB.position.x+val,quadB.position.y+val,quadZ-0.01);
-  textC.position.set(quadC.position.x+val,quadC.position.y-val,quadZ-0.01);
-  textD.position.set(quadD.position.x-val,quadD.position.y-val,quadZ-0.01);
+  if(textA!=undefined)
+    textA.position.set(quadA.position.x-val,quadA.position.y+val,quadA.position.z-0.01);
+  if(textB!=undefined)
+    textB.position.set(quadB.position.x+val,quadB.position.y+val,quadB.position.z-0.01);
+  if(textC!=undefined)
+    textC.position.set(quadC.position.x+val,quadC.position.y-val,quadC.position.z-0.01);
+  if(textD!=undefined)
+    textD.position.set(quadD.position.x-val,quadD.position.y-val,quadD.position.z-0.01);
 }
 
 function createTextLabels() {
@@ -686,9 +906,9 @@ function plotPoint(x,y) {
   var myMaterial= new THREE.MeshBasicMaterial();
   var myCircle = new THREE.Mesh(myGeometry,myMaterial);
   myCircle.position.set(x,y,quadZ);
-  PIEaddElement(myCircle);
   myCircle.material.color = new THREE.Color(quadColor);
   myCircle.material.needsUpdate = true;
+  PIEaddElement(myCircle);
   return(myCircle);
 }
 
@@ -744,16 +964,15 @@ function loadExperimentElements() {
   PIEupdateInfo(myInfoContent);
   //initialize data
   initializeScene();
-  initializeGUIControls();
+  initializeInputGUIControls();
   initializeVerticeDefaults();
   //Create a white background
-  console.log("Creating back");
   createBackground();
-  console.log("Background Created");
-
+  initialText = createInitialText();
+  //createInitialText();
   //Plot the Quadrilateral
-  plotQuadrilateral();
-    createTextLabels();
+  /*plotQuadrilateral();
+  createTextLabels();
   PIEdragElement(quadA);
   PIEdragElement(quadB);
   PIEdragElement(quadC);
@@ -761,42 +980,145 @@ function loadExperimentElements() {
   PIEsetDrag(quadA,dragA);
   PIEsetDrag(quadB,dragB);
   PIEsetDrag(quadC,dragC);
-  PIEsetDrag(quadD,dragD);
-  //Create Labels
-  resetExperiment();
+  PIEsetDrag(quadD,dragD);*/
   PIEsetAreaOfInterest(mySceneTLX,mySceneTLY,mySceneBRX,mySceneBRY);
-  console.log("Height "+mySceneH);
-  console.log("Width "+mySceneW);
-  console.log("A "+quadA.position.x+" "+quadA.position.y);
-  console.log("B "+quadB.position.x+" "+quadB.position.y);
-  console.log("C "+quadC.position.x+" "+quadC.position.y);
-  console.log("D "+quadD.position.x+" "+quadD.position.y);
 }
 
 function resetExperiment() {
-  setCurrentShape(SQUARE);
+  prevVal=-1;
+  removeQuadrilateral();
+  initialText.position.z=quadZ;
   dragHandler(false);
-  PIEchangeInputText(dragLabel,false);
+  PIEchangeDisplayCheckbox(dragLabel,false);
+  PIErender();
 }
 
+var prevVal=-1;
+var created=false;
+var createdGUI=false;
 function updateExperimentElements(t,dt) {
+  sec=isSec(t);
+  if(sec==0) {
+    initialText.position.z=10;
+    if(createdGUI) {
+      PIEchangeDisplayText("∠A","-");
+      PIEchangeDisplayText("∠B","-");
+      PIEchangeDisplayText("∠C","-");
+      PIEchangeDisplayText("∠D","-");
+    }
+    PIErender();
+  }
+  ///Plot A
+  if(sec==1) {
+    if(!created) {
+      quadA=plotPoint(defaultxA,defaultyA);
+      textA = initializeText("A");
+    }
+    else {
+      quadA.position.set(defaultxA,defaultyA,quadZ);
+    }
+    alignText();
+    console.log("A");
+  }
+  //PlotB
+  else if(sec==2) {
+    if(!created) {
+      quadB=plotPoint(defaultxB,defaultyB);
+      textB = initializeText("B");
+      sideAB=plotLine(quadA,quadB,sideThickness,0);
+    }
+    else {
+      quadB.position.set(defaultxB,defaultyB,quadZ);
+      setLines();
+      sideAB.geometry.vertices[0].z=quadZ-0.01;
+      sideAB.geometry.vertices[1].z=quadZ-0.01;
+      sideAB.geometry.verticesNeedUpdate=true;
+      PIErender();
+    }
+    alignText();
+    console.log("B");
+  }
+  //Plot C
+  else if(sec==3) {
+    if(!created) {
+      console.log("Undefined");
+      quadC=plotPoint(defaultxC,defaultyC);
+      textC = initializeText("C");
+      sideBC=plotLine(quadB,quadC,sideThickness,0);
+    }
+    else {
+      quadC.position.set(defaultxC,defaultyC,quadZ);
+      setLines();
+      sideBC.geometry.vertices[0].z=quadZ-0.01;
+      sideBC.geometry.vertices[1].z=quadZ-0.01;
+      sideBC.geometry.verticesNeedUpdate=true;
+      PIErender();
+    }
+    alignText();
+    console.log("C");
+  }
+  //Plot D
+  else if(sec==4) {
+    if(!created) {
+      quadD=plotPoint(defaultxD,defaultyD);
+      textD = initializeText("D");
+      sideCD=plotLine(quadC,quadD,sideThickness,0);
+    }
+    else {
+      quadD.position.set(defaultxD,defaultyD,quadZ);
+      setLines();
+      sideCD.geometry.vertices[0].z=quadZ-0.01;
+      sideCD.geometry.vertices[1].z=quadZ-0.01;
+      sideCD.geometry.verticesNeedUpdate=true;
+      PIErender();
+    }
+    alignText();
+    console.log("D");
 
+  }
+  //Side AD
+  else if(sec==5) {
+    if(!created)
+      sideDA=plotLine(quadD,quadA,sideThickness,0);
+    else {
+      setLines();
+      sideDA.geometry.vertices[0].z=quadZ-0.01;
+      sideDA.geometry.vertices[1].z=quadZ-0.01;
+      sideDA.geometry.verticesNeedUpdate=true;
+    }
+  }
+  //Diag AC
+  else if(sec==6) {
+    if(!created)
+      diagAC=plotLine(quadA,quadC,diagThickness,1);
+    else {
+      setLines();
+      diagAC.geometry.vertices[0].z=quadZ-0.01;
+      diagAC.geometry.vertices[1].z=quadZ-0.01;
+      diagAC.geometry.verticesNeedUpdate=true;
+    }
+  }
+  //Diag BD
+  else if(sec==7) {
+    if(!created)
+      diagBD=plotLine(quadB,quadD,diagThickness,1);
+    else {
+      setLines();
+      diagBD.geometry.vertices[0].z=quadZ-0.01;
+      diagBD.geometry.vertices[1].z=quadZ-0.01;
+      diagBD.geometry.verticesNeedUpdate=true;
+    }
+    created=true;
+  }
+  //Add UI
+  else if(sec==8) {
+    addDrag();
+    if(!createdGUI)
+    initializeGUIControls();
+    PIEchangeDisplayCheckbox(diagonalsLabel,true);
+    createdGUI=true;
+    calculateAngles()
+  }
 }
 
 /*-------------------------------Debugging functions--------------------------------------------------*/
-function printShape() {
-  var string;
-  if(currentShape==SQUARE)
-    string="Square";
-  else if(currentShape==RECTANGLE)
-    string="Rectangle";
-  else if(currentShape==PARALLELOGRAM)
-    string= "Parallelogram";
-  else if(currentShape==ROHUMBUS)
-    string="Rohumbus";
-  else if(currentShape==KITE)
-    string="Kite";
-  else
-    string="Trapezium";
-  return(string);
-}
